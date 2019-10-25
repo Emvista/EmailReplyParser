@@ -32,4 +32,11 @@ public class Fragment {
 	public boolean isEmpty() {
 		return "".equals(this.content.replace("\n", ""));
 	}
+	
+	public void reverseSignature() {
+		if(this.isSignature)
+			this.isSignature = false;
+		else
+			this.isSignature = true;
+	}
 }

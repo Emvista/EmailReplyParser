@@ -1,12 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>com.edlio.emailreplyparser</groupId>
 	<artifactId>EmailReplyParser</artifactId>
 	<packaging>jar</packaging>
 	<version>1.1</version>
+	
 	<name>EmailReplyParser</name>
 	<url>https://github.com/edlio/EmailReplyParser</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>10</java.version>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>10</release>
+					<encoding>UTF-8</encoding>
+					<source>10</source>
+					<target>10</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -20,4 +40,12 @@
 			<version>3.0</version>
 		</dependency>
 	</dependencies>
+	
+	<repositories>
+		<repository>
+			<id>dev</id>
+			<name>dev</name>
+			<url>http://mercury.em:8080/repository/dev</url>
+		</repository>
+	</repositories>
 </project>

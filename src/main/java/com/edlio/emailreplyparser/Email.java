@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class Email {
-	private List<Fragment> fragments = new ArrayList<Fragment>();
+	private List<Fragment> fragments = new ArrayList<>();
 	
 	public Email(List<Fragment> fragments) {
 		this.fragments = fragments;
@@ -17,7 +17,7 @@ public class Email {
 	}
 	
 	public String getVisibleText() {
-		List<String> visibleFragments = new ArrayList<String>();
+		List<String> visibleFragments = new ArrayList<>();
 		for (Fragment fragment : fragments) {
 			if (!fragment.isHidden())
 				visibleFragments.add(fragment.getContent());
@@ -26,7 +26,7 @@ public class Email {
 	}
 	
 	public String getHiddenText() {
-		List<String> hiddenFragments = new ArrayList<String>();
+		List<String> hiddenFragments = new ArrayList<>();
 		for (Fragment fragment : fragments) {
 			if (fragment.isHidden())
 				hiddenFragments.add(fragment.getContent());
