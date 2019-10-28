@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 public class EmailParser {
 	
 	static final Pattern FR_SIG_PATTERN = Pattern.compile( "((^Envoyé depuis mon (\\s*\\w+){1,3}$)|(^-\\w|^\\s?__|^\\s?--|^\u2013|^\u2014))", Pattern.DOTALL);
+	static final Pattern FR_SIG_PATTERN2 = Pattern.compile( "^Téléchargez Outlook pour iOS.*", Pattern.DOTALL);
 	static final Pattern EN_SIG_PATTERN = Pattern.compile( "((^Sent from my (\\s*\\w+){1,3}$)|(^-\\w|^\\s?__|^\\s?--|^\u2013|^\u2014))", Pattern.DOTALL);
 	static final Pattern QUOTE_PATTERN = Pattern.compile("(^>+)", Pattern.DOTALL);
 	private static List<Pattern> compiledQuoteHeaderPatterns = new ArrayList<>();
@@ -31,9 +33,9 @@ public class EmailParser {
 		quoteHeadersRegex.add("^(Le\\s(.{1,500})a(.{1,2})écrit([ | ])*:)");
 		quoteHeadersRegex.add("^(On\\s(.{1,500})wrote([ | ])*:)");
 		quoteHeadersRegex.add("^\\[Logo\\]");
-		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet]( )*:( )*[^\\n]+");
-		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet]( )*:( )*[^\\n]+");
-		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet]( )*:( )*[^\\n]+");
+		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
+		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
+		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
 		
 		
@@ -43,9 +45,10 @@ public class EmailParser {
 		quoteHeadersRegex.add("[From|To]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Sent|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Object|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add("[From|To]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[From|To]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Sent|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Object|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add("[From|To]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[From|To]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
-		
+		quoteHeadersRegex.add("Date( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[From|To]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
 		maxParagraphLines = 6;
 		maxNumCharsEachLine = 200;
+		compileQuoteHeaderRegexes();
 	}
 
 	/**
@@ -56,10 +59,34 @@ public class EmailParser {
 	 * @return
 	 */
 	public Email parse(String emailText, String senderMail, String username) {
+		
 		Email email =  parse(emailText);
 		return  removeSenderSignature(email, senderMail, username);
 	}
 	
+	/**
+	 * Splits the given email text into a list of {@link Fragment} and returns the {@link Email} object. 
+	 * @param emailText
+	 * @param senderMail
+	 * @param username
+	 * @return
+	 */
+	public Email parseEnodedEmail(String emailText, String senderMail, String username) {
+		
+		return  parse(decodeBase64Email(emailText), senderMail, username);
+	}
+	
+	public String decodeBase64Email(String body) {
+
+		return org.apache.commons.codec.binary.StringUtils.newStringUtf8(Base64.decodeBase64(body));
+		
+	}
+	
+	public String encodeBase64Email(String body) {
+
+		return org.apache.commons.codec.binary.StringUtils.newStringUtf8(Base64.encodeBase64(body.getBytes()));
+		
+	}
 	/**
 	 * Splits the given email text into a list of {@link Fragment} and returns the {@link Email} object. 
 	 * 
@@ -68,7 +95,7 @@ public class EmailParser {
 	 */
 	public Email parse(String emailText) {
 		fragments = new ArrayList<>();
-		compileQuoteHeaderRegexes();
+		
 		
 		// Normalize line endings
 		emailText = emailText.replace("\r\n", "\n");
@@ -235,7 +262,7 @@ public class EmailParser {
 	 * @return
 	 */
 	private boolean isSignature(String line) {
-		return FR_SIG_PATTERN.matcher(line).find() || EN_SIG_PATTERN.matcher(line).find() ;
+		return FR_SIG_PATTERN.matcher(line).find() ||  FR_SIG_PATTERN2.matcher(line).find() || EN_SIG_PATTERN.matcher(line).find() ;
 		
 	}
 	
@@ -300,6 +327,7 @@ public class EmailParser {
 		Collections.reverse(paragraph);
 		String content = new StringBuilder(StringUtils.join(paragraph,"\n")).toString();
 		for(Pattern p : compiledQuoteHeaderPatterns) {
+
 			if (p.matcher(content).find()) {
 				return true;
 			}
@@ -334,7 +362,7 @@ public class EmailParser {
 			if(emailLine.startsWith(senderMail) || emailLine.endsWith(senderMail) 
 					|| emailLine.startsWith("<"+senderMail+">") || emailLine.endsWith("<"+senderMail+">") 
 					|| emailLine.startsWith("<mailto:"+senderMail+">") || emailLine.endsWith("<mailto:"+senderMail+">") 
-					|| (!username.isEmpty() && stripAccent(emailLine).startsWith(stripAccent(username)))) {
+					|| containsUsername(emailLine, username)) {
 				stop=i;
 			}
 		}
@@ -359,5 +387,17 @@ public class EmailParser {
 
 		
 		return new Email(frags);
+	}
+	
+	private static boolean containsUsername(String line, String username) {
+		if(!username.isEmpty() && stripAccent(line).startsWith(stripAccent(username))){
+			return true;
+		}
+		String[] fullname = username.split(" ");
+		if(!username.isEmpty() && fullname.length==2) {
+			return  stripAccent(line).startsWith(stripAccent(fullname[1])+" "+stripAccent(fullname[0]));
+		}
+		return false;
+		
 	}
 }
