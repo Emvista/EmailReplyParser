@@ -2,21 +2,23 @@ package com.edlio.emailreplyparser;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 public class EmailReplyParserTest {
 
-	//@Test
+	@Test
 	public void testReadWithNullContent() {
 		Email email = EmailReplyParser.read(null);
 		assertEquals("", email.getVisibleText());
 	}
 	
-	//@Test
+	@Test
 	public void testReadWithEmptyContent() {
 		Email email = EmailReplyParser.read("");
 		assertEquals("", email.getVisibleText());
 	}
 	
-	//@Test
+	@Test
 	public void testParseReply() {
 		assertEquals("Hi,\n\nYou can list the keys for the bucket and call delete for each. "
 				+ "Or if you\nput the keys (and kept track of them in your test) you can delete them\none at a time "
@@ -29,37 +31,37 @@ public class EmailReplyParserTest {
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_2.txt")));
 	}
 
-	//@Test
+	@Test
 	public void testParseOutSentFromIPhone() {
 		assertEquals("Here is another email", 
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_iphone.txt")));
 	}
 	
-	//@Test
+	@Test
 	public void testParseOutSentFromBlackBerry() {
 		assertEquals("Here is another email", 
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_blackberry.txt")));
 	}
 	
-	//@Test
+	@Test
 	public void testDoNotParseOutSendFromInRegularSentence() {
 		assertEquals("Here is another email\n\nSent from my desk, is much easier then my mobile phone.", 
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_sent_from_my_not_signature.txt")));
 	}
 
-	//@Test
+	@Test
 	public void testParseOutJustTopForOutlookReply() {
 		assertEquals("Outlook with a reply", 
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_2_1.txt")));
 	}
 	
-	//@Test
+	@Test
 	public void testRetainsBullets() {
 		assertEquals("test 2 this should list second\n\nand have spaces\n\nand retain this formatting\n\n\n   - how about bullets\n   - and another", 
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_bullets.txt")));
 	}
 	
-	//@Test
+	@Test
 	public void testUnquotedReply() {
 		assertEquals("This is my reply.", 
 				EmailReplyParser.parseReply(FixtureGetter.getFixture("email_unquoted_reply.txt")));
