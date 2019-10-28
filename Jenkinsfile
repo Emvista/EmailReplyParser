@@ -20,7 +20,7 @@ pipeline {
         }
          stage('DeployDev') {
             when {
-                branch 'emvista'
+                branch 'dev'
             }
             steps {
                  echo 'Deploying with maven on archiva..'
