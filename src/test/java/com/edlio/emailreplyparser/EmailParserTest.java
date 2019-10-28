@@ -14,6 +14,29 @@ import org.junit.Test;
 
 public class EmailParserTest {
 
+	
+	
+	
+	
+	@Test
+	public void test() {
+		EmailParser parser = new EmailParser();
+
+		String encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
+		Email email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","");
+		String result = parser.encodeBase64Email(email.getVisibleText());
+		String expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQ==";
+		assertEquals(expected, result);
+		
+		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
+		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette");
+		result = parser.encodeBase64Email(email.getVisibleText());
+		expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXM=";
+		assertEquals(expected, result);
+		
+		
+		
+	}
 	@Test
 	public void testReadsSimpleBody() {
 		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_1.txt"));
@@ -206,7 +229,7 @@ public class EmailParserTest {
 		assertTrue(matcher.find());
 	}
 	
-	@Test
+	//@Test
 	public void testCustomQuoteHeader() {
 		EmailParser parser = new EmailParser();
 		parser.getQuoteHeadersRegex().add("^(\\d{4}(.+)rta:)");
