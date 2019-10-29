@@ -463,7 +463,7 @@ public class EmailParser {
 	}
 	
 	public static String handleLinks(String body) {
-		return body.replaceAll("\\b((http|https)\\://)?[a-zA-Z0-9\\./\\?\\:@\\-_=#]+\\.([a-zA-Z0-9\\&\\./\\?\\:@\\-_=#])*/{0,1}",
+		return body.replaceAll("\\b((http|https)\\://)?[a-zA-Z0-9\\./\\?\\:@\\-_=#]+\\.([a-zA-Z0-9\\&\\./\\?\\:@\\-_=#])+/{0,1}",
 				"Link");
 	}
 }
