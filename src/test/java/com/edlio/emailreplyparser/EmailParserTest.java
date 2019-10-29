@@ -48,6 +48,52 @@ public class EmailParserTest {
 		
 		
 	}
+	
+	@Test
+	public void testLinks() {
+		String text = "rendez-vous sur notre site web : http://test.test-75.1474.stackoverflow.com/";
+		String expected = "rendez-vous sur notre site web : Link";
+		
+		String result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : https://www.stackoverflow.com";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : http://wwww.stackoverflow.com/";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : http://www.example.com/etcetc";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : example.com/etcetc?query=aasd";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : example.com/etcetc?query=aasd&dest=asds";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : http://stackoverflow.com/questions/6427530/regular-expression-pattern-to-match-url-with-or-without-http-www/";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : user:pass@example.com/etcetc";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : www.example.com/etcetc";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		
+		text = "rendez-vous sur notre site web : stackoverflow.com/";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+	}
 	@Test
 	public void testReadsSimpleBody() {
 		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_1.txt"));

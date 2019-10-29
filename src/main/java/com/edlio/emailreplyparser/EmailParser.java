@@ -454,10 +454,16 @@ public class EmailParser {
 		for (int i = 1; i < lines.length; i++)
 			newMail.append(lines[i] + nl);
 
-		newMail = new StringBuilder(newMail.toString().replaceAll("[\\\r\\\n]{2,}", "\\\n").replaceAll("\\\r\\\n"," \\\r\\\n" ));
+		newMail = new StringBuilder(handleLinks(newMail.toString()).replaceAll("[\\\r\\\n]{2,}", "\\\n").replaceAll("\\\r\\\n"," \\\r\\\n" ));
+		
 		Fragment hiddenF = new Fragment(newMail.toString().trim(), false, false, false);
 		frags.add(hiddenF);
 		return new Email(frags);
 
+	}
+	
+	public static String handleLinks(String body) {
+		return body.replaceAll("\\b((http|https)\\://)?[a-zA-Z0-9\\./\\?\\:@\\-_=#]+\\.([a-zA-Z0-9\\&\\./\\?\\:@\\-_=#])*/{0,1}",
+				"Link");
 	}
 }
