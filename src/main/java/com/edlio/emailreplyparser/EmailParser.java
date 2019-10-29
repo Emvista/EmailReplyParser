@@ -454,7 +454,7 @@ public class EmailParser {
 		for (int i = 1; i < lines.length; i++)
 			newMail.append(lines[i] + nl);
 
-		newMail = new StringBuilder(handleLinks(newMail.toString()).replaceAll("[\\\r\\\n]{2,}", "\\\n").replaceAll("\\\r\\\n"," \\\r\\\n" ));
+		newMail = new StringBuilder(handleLinks(newMail.toString()).replaceAll("[\\\r\\\n]{2,}", "\\\n").replaceAll("\\\r\\\n"," \\\r\\\n" ).replaceAll("\\\n"," \\\n" ));
 		
 		Fragment hiddenF = new Fragment(newMail.toString().trim(), false, false, false);
 		frags.add(hiddenF);
