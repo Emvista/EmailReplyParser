@@ -41,6 +41,7 @@ public class EmailParserTest {
 		result = parser.encodeBase64Email(email.getVisibleText());
 
 		expected = "T24gc+KAmW9yZ2FuaXNlIGNvbW1lbnQgPwpBIHBsdXM=";
+		
 		assertEquals(expected, result);
 		
 		

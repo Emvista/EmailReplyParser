@@ -454,7 +454,7 @@ public class EmailParser {
 		for (int i = 1; i < lines.length; i++)
 			newMail.append(lines[i] + nl);
 
-		newMail = new StringBuilder(newMail.toString().replaceAll("[\\\r\\\n]{2,}", "\\\n"));
+		newMail = new StringBuilder(newMail.toString().replaceAll("[\\\r\\\n]{2,}", "\\\n").replaceAll("\\\r\\\n"," \\\r\\\n" ));
 		Fragment hiddenF = new Fragment(newMail.toString().trim(), false, false, false);
 		frags.add(hiddenF);
 		return new Email(frags);
