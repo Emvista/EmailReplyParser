@@ -67,6 +67,6 @@ Credits
 
 
 License
--------
+------- 
 
 EmailReplyParser is released under the MIT License. See the bundled LICENSE file for details.
