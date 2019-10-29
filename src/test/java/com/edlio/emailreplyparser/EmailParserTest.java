@@ -23,16 +23,26 @@ public class EmailParserTest {
 		EmailParser parser = new EmailParser();
 
 		String encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
-		Email email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","");
+		Email email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","",false);
 		String result = parser.encodeBase64Email(email.getVisibleText());
 		String expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQ==";
 		assertEquals(expected, result);
 		
 		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
-		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette");
+		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",false);
 		result = parser.encodeBase64Email(email.getVisibleText());
 		expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXM=";
 		assertEquals(expected, result);
+		
+		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
+		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",true);
+
+		
+		result = parser.encodeBase64Email(email.getVisibleText());
+
+		expected = "T24gc+KAmW9yZ2FuaXNlIGNvbW1lbnQgPwpBIHBsdXM=";
+		assertEquals(expected, result);
+		
 		
 		
 		

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
@@ -24,7 +25,7 @@ public class EmailParser {
 	private List<FragmentDTO> fragments = new ArrayList<>();
 	private int maxParagraphLines;
 	private int maxNumCharsEachLine;
-	
+	private static List<String> courtesyHeaders;
 	
 	/**
 	 * Initialize EmailParser.
@@ -49,6 +50,9 @@ public class EmailParser {
 		maxParagraphLines = 6;
 		maxNumCharsEachLine = 200;
 		compileQuoteHeaderRegexes();
+		
+		courtesyHeaders = List.of("bonjour", "bjr", "salut", "slt", "coucou", "cc", "bonsoir", "bsr", "cher", "chers",
+				"chère", "chères", "hello", "hi", "re", "hola", "hey");
 	}
 
 	/**
@@ -58,10 +62,16 @@ public class EmailParser {
 	 * @param username
 	 * @return
 	 */
-	public Email parse(String emailText, String senderMail, String username) {
+	public Email parse(String emailText, String senderMail, String username, boolean removeCourtesyHeaders) {
 		
 		Email email =  parse(emailText);
-		return  removeSenderSignature(email, senderMail, username);
+		email =  removeSenderSignature(email, senderMail, username);
+		if(removeCourtesyHeaders) {
+			return removeCourtesyHeaders(email);
+		}
+		// TODO : removeCourtesyFooters ?
+		
+		return email;
 	}
 	
 	/**
@@ -71,9 +81,9 @@ public class EmailParser {
 	 * @param username
 	 * @return
 	 */
-	public Email parseEnodedEmail(String emailText, String senderMail, String username) {
+	public Email parseEnodedEmail(String emailText, String senderMail, String username, boolean removeCourtesyHeaders) {
 		
-		return  parse(decodeBase64Email(emailText), senderMail, username);
+		return  parse(decodeBase64Email(emailText), senderMail, username,removeCourtesyHeaders);
 	}
 	
 	public String decodeBase64Email(String body) {
@@ -399,5 +409,55 @@ public class EmailParser {
 		}
 		return false;
 		
+	}
+	
+	private Email removeCourtesyHeaders(Email email) {
+		String body = email.getVisibleText();
+		List<Fragment> frags = new ArrayList<>();
+		for(Fragment f : email.getFragments()) {
+			if(f.isHidden() && !frags.contains(f)) {
+				frags.add(f);
+			}
+		}
+		
+		String nl = "\n";
+		if (body == null || body.isEmpty())
+			return email;
+		StringBuilder newMail = new StringBuilder();
+		String firstLine = "";
+		String[] lines = body.trim().split(nl);
+
+		if (lines.length == 0)
+			return email;
+		for (String form : courtesyHeaders) {
+			String regex = "^" + form + "( \\p{L}+)*( )*(,)*";
+			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+			Matcher m = p.matcher(lines[0].trim());
+			boolean out =false;
+			if (m.matches()) {
+				firstLine = "";
+				out=true;
+
+			}
+			else if (Arrays.asList(lines[0].toLowerCase().replace(",", "").split("\\s+")).contains(form)) {
+
+				firstLine = lines[0].replaceAll("(?i)" + form, "");
+				out=true;
+			} else {
+				firstLine = lines[0];
+			}
+			if(out) {
+				break;
+			}
+		}
+		newMail.append(firstLine + nl);
+		for (int i = 1; i < lines.length; i++)
+			newMail.append(lines[i] + nl);
+
+		newMail = new StringBuilder(newMail.toString().replaceAll("[\\\r\\\n]{2,}", "\\\n"));
+		Fragment hiddenF = new Fragment(newMail.toString().trim(), false, false, false);
+		frags.add(hiddenF);
+		return new Email(frags);
+
 	}
 }
