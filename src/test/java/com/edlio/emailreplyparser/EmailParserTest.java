@@ -23,19 +23,72 @@ public class EmailParserTest {
 		EmailParser parser = new EmailParser();
 
 		String encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
-		Email email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","");
+		Email email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","",false);
 		String result = parser.encodeBase64Email(email.getVisibleText());
 		String expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQ==";
 		assertEquals(expected, result);
 		
 		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
-		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette");
+		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",false);
 		result = parser.encodeBase64Email(email.getVisibleText());
 		expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXM=";
 		assertEquals(expected, result);
 		
+		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
+		email = parser.parseEnodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",true);
+		result = parser.encodeBase64Email(email.getVisibleText());
+		expected = "T24gc+KAmW9yZ2FuaXNlIGNvbW1lbnQgPyAKQSBwbHVz";
+		assertEquals(expected, result);
 		
 		
+		
+		
+	}
+	
+	@Test
+	public void testLinks() {
+		String text = "rendez-vous sur notre site web : http://test.test-75.1474.stackoverflow.com/";
+		String expected = "rendez-vous sur notre site web : Link";
+		
+		String result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : https://www.stackoverflow.com";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : http://wwww.stackoverflow.com/";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : http://www.example.com/etcetc";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : example.com/etcetc?query=aasd";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : example.com/etcetc?query=aasd&dest=asds";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : http://stackoverflow.com/questions/6427530/regular-expression-pattern-to-match-url-with-or-without-http-www/";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : user:pass@example.com/etcetc";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		text = "rendez-vous sur notre site web : www.example.com/etcetc";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
+		
+		
+		text = "rendez-vous sur notre site web : stackoverflow.com/";
+		result = EmailParser.handleLinks(text);
+		assertEquals(expected, result);
 	}
 	@Test
 	public void testReadsSimpleBody() {
