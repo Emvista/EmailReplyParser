@@ -36,6 +36,10 @@ public class EmailParser {
 		quoteHeadersRegex.add("^\\[Logo\\]");
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
+		
+//		quoteHeadersRegex.add("^((De|Envoyé|Objet|Sujet|Subject|À|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
+		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
+		
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
 		
@@ -400,12 +404,12 @@ public class EmailParser {
 	}
 	
 	private static boolean containsUsername(String line, String username) {
-		if(!username.isEmpty() && stripAccent(line).startsWith(stripAccent(username))){
+		if(!username.isEmpty() && stripAccent(line.replace("*", "")).startsWith(stripAccent(username))){
 			return true;
 		}
 		String[] fullname = username.split(" ");
 		if(!username.isEmpty() && fullname.length==2) {
-			return  stripAccent(line).startsWith(stripAccent(fullname[1])+" "+stripAccent(fullname[0]));
+			return  stripAccent(line.replace("*", "")).startsWith(stripAccent(fullname[1])+" "+stripAccent(fullname[0]));
 		}
 		return false;
 		
@@ -430,7 +434,7 @@ public class EmailParser {
 		if (lines.length == 0)
 			return email;
 		for (String form : courtesyHeaders) {
-			String regex = "^" + form + "( \\p{L}+)*( )*(,)*";
+			String regex = "^" + form + "( \\p{L}+)*( )*(,|!|🙂)*"; // TODO : list all possible emojis ?
 			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(lines[0].trim());
 			boolean out =false;
@@ -439,9 +443,8 @@ public class EmailParser {
 				out=true;
 
 			}
-			else if (Arrays.asList(lines[0].toLowerCase().replace(",", "").split("\\s+")).contains(form)) {
-
-				firstLine = lines[0].replaceAll("(?i)" + form, "");
+			else if (Arrays.asList(lines[0].toLowerCase().replace(",", "").split("\\s+")).contains(form)) {				
+				firstLine = lines[0].replaceAll("(?i)" + form+" (,|!|🙂|et)", "");
 				out=true;
 			} else {
 				firstLine = lines[0];
@@ -463,7 +466,8 @@ public class EmailParser {
 	}
 	
 	public static String handleLinks(String body) {
-		return body.replaceAll("\\b((http|https)\\://)?[a-zA-Z0-9\\./\\?\\:@\\-_=#]+\\.([a-zA-Z0-9\\&\\./\\?\\:@\\-_=#])+/{0,1}",
+		//old = \\b((http|https)\\://)?[a-zA-Z0-9\\./\\?\\:@\\-_=#]+\\.([a-zA-Z0-9\\&\\./\\?\\:@\\-_=#])+/{0,1}
+		return body.replaceAll("\\b((http|https)\\://)?[a-zA-Z0-9\\./\\?\\:@\\-_=#]+\\.([a-zA-Z])+((/([a-zA-Z0-9\\&\\./\\?\\:@\\-_=#])+)*/{0,1})",
 				"Link");
 	}
 }
