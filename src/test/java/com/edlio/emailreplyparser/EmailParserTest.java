@@ -44,6 +44,52 @@ public class EmailParserTest {
 		
 		
 	}
+	@Test
+	public void testQuoteHeaders() {
+		EmailParser parser = new EmailParser();
+		String expected = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdA==";
+		
+		
+		String encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRGUgOiBqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20gPGpvc2V0dGUuZm9ydGlzaEBob3RtYWlsLmNvbT4KRW52b3nDqSA6IG1hcmRpIDUgbm92ZW1icmUgMjAxOSAxNTozMArDgCA6IGpvc2V0dGUuZm9ydGlzaEBrYWxpcHNhLmNvbSA8am9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tPgpPYmpldCA6IFJFOiBUZXN0IGRlcyBDQyBldCBDQ0k=";
+		Email email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		String result = parser.encodeBase64Email(email.getVisibleText());
+		assertEquals(expected, result);
+		
+		
+		encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRGUgOiBqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20gPGpvc2V0dGUuZm9ydGlzaEBob3RtYWlsLmNvbT4KRW52b3nDqSA6IG1hcmRpIDUgbm92ZW1icmUgMjAxOSAxNTozMArDgCA6IGpvc2V0dGUuZm9ydGlzaEBrYWxpcHNhLmNvbSA8am9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tPgpPYmpjZXQgOiBSRTogVGVzdCBkZXMgQ0MgZXQgQ0NJ";
+		email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		result = parser.encodeBase64Email(email.getVisibleText());
+		assertEquals(expected, result);
+		
+		encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KCsOAIDogam9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tIDxqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20+CkRlIDogam9zZXR0ZS5mb3J0aXNoQGhvdG1haWwuY29tIDxqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20+CgpPYmpldCA6IFJFOiBUZXN0IGRlcyBDQyBldCBDQ0kKRW52b3nDqSA6IG1hcmRpIDUgbm92ZW1icmUgMjAxOSAxNTozMA==";
+		email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		result = parser.encodeBase64Email(email.getVisibleText());
+		assertEquals(expected, result);
+		
+		encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KCsOAIDogam9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tIDxqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20+CkRlIDogam9zZXR0ZS5mb3J0aXNoQGhvdG1haWwuY29tIDxqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20+CkNDOgpPYmpldCA6IFJFOiBUZXN0IGRlcyBDQyBldCBDQ0kKRW52b3nDqSA6IG1hcmRpIDUgbm92ZW1icmUgMjAxOSAxNTozMA==";
+		email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		result = parser.encodeBase64Email(email.getVisibleText());
+		assertEquals(expected, result);
+		
+		encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KCsOAIDogam9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tIDxqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20+CkZyb20gOiBqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20gPGpvc2V0dGUuZm9ydGlzaEBob3RtYWlsLmNvbT4KQ0M6Ck9iamV0IDogUkU6IFRlc3QgZGVzIENDIGV0IENDSQpEYXRlIDogbWFyZGkgNSBub3ZlbWJyZSAyMDE5IDE1OjMw";
+		email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		result = parser.encodeBase64Email(email.getVisibleText());
+		assertEquals(expected, result);
+		
+		encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KClRvOiA/Pz8/CkZyb20gOiBqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20gPGpvc2V0dGUuZm9ydGlzaEBob3RtYWlsLmNvbT4KQ0M6Ck9iamV0IDogUkU6IFRlc3QgZGVzIENDIGV0IENDSQpEYXRlIDogbWFyZGkgNSBub3ZlbWJyZSAyMDE5IDE1OjMw";
+		email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		result = parser.encodeBase64Email(email.getVisibleText());
+		assertEquals(expected, result);
+		
+		encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKRGF0ZSA6IGxlIDI4IHNlcHRlbWJyZSAKQSBwbHVzID0p";
+		email = parser.parseEnodedEmail(encodedTtext,"blabla","",false);	
+		result = parser.encodeBase64Email(email.getVisibleText());
+		
+		System.out.println(email.getVisibleText());
+		System.out.println(result);
+		assertFalse(result.equals(expected));
+		
+	}
 	
 	@Test
 	public void testLinks() {

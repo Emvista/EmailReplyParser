@@ -38,6 +38,8 @@ public class EmailParser {
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 		
 //		quoteHeadersRegex.add("^((De|Envoyé|Objet|Sujet|Subject|À|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
+//		quoteHeadersRegex.add("^((From|Sent|Object|Subjet|To|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
+		
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
 		
 		quoteHeadersRegex.add("[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
