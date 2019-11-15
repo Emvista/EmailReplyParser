@@ -101,7 +101,7 @@ public class EmailParser {
 	 * @param username
 	 * @return
 	 */
-	public Email parseEnodedEmail(String emailText, String senderMail, String username, boolean removeCourtesyHeaders) {
+	public Email parseEncodedEmail(String emailText, String senderMail, String username, boolean removeCourtesyHeaders) {
 
 		return parse(decodeBase64Email(emailText), senderMail, username, removeCourtesyHeaders);
 	}
