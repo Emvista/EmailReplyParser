@@ -1,8 +1,6 @@
 package com.edlio.emailreplyparser;
 
-import static org.junit.Assert.*;
-
-import java.io.ObjectInputStream.GetField;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
