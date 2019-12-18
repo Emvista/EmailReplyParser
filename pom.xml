@@ -4,19 +4,22 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.edlio.emailreplyparser</groupId>
-	<artifactId>EmailReplyParser</artifactId>
-	<version>3.0.3</version>
+	<artifactId>${project.name}</artifactId>
+	<version>${project.version}</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
 	<url>https://github.com/edlio/EmailReplyParser</url>
 
 	<properties>
+		<project.version>3.0.3</project.version>
+		<project.name>EmailReplyParser</project.name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>10</java.version>
-		<sonar.projectKey>EmailReplyParser</sonar.projectKey>
-		<sonar.projectName>EmailReplyParser</sonar.projectName>
-		<sonar.projectVersion>3.0.3</sonar.projectVersion>
+		
+		<sonar.projectKey>${project.name}</sonar.projectKey>
+		<sonar.projectName>${project.name}</sonar.projectName>
+		<sonar.projectVersion>${project.version}</sonar.projectVersion>		
 	</properties>
 	<build>
 		<plugins>
