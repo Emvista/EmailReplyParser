@@ -26,7 +26,8 @@ public class EmailParser {
 	private List<FragmentDTO> fragments = new ArrayList<>();
 	private int maxParagraphLines;
 	private int maxNumCharsEachLine;
-	private static List<String> courtesyHeaders;
+	private static List<String> courtesyHeaders = List.of("bonjour", "bjr", "salut", "slt", "coucou", "cc", "bonsoir", "bsr", "cher", "chers",
+			"chère", "chères", "hello", "hi", "re", "hola", "hey");
 
 	/**
 	 * Initialize EmailParser.
@@ -40,8 +41,8 @@ public class EmailParser {
 		quoteHeadersRegex.add(
 				"[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 
-//		quoteHeadersRegex.add("^((De|Envoyé|Objet|Sujet|Subject|À|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
-//		quoteHeadersRegex.add("^((From|Sent|Object|Subjet|To|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
+//		"^((De|Envoyé|Objet|Sujet|Subject|À|Cc|Date)( )*:( )*[^\\n]+\\n?)+"
+//		"^((From|Sent|Object|Subjet|To|Cc|Date)( )*:( )*[^\\n]+\\n?)+"
 
 		quoteHeadersRegex.add(
 				"[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
@@ -67,8 +68,7 @@ public class EmailParser {
 		maxNumCharsEachLine = 200;
 		compileQuoteHeaderRegexes();
 
-		courtesyHeaders = List.of("bonjour", "bjr", "salut", "slt", "coucou", "cc", "bonsoir", "bsr", "cher", "chers",
-				"chère", "chères", "hello", "hi", "re", "hola", "hey");
+		
 	}
 
 	/**

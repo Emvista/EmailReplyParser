@@ -10,6 +10,10 @@ public class EmailReplyParser {
 		return parser.parse(emailText);
 	}
 	
+	public EmailReplyParser() {
+		super();
+	}
+
 	public static String parseReply(String emailText) {
 		return read(emailText).getVisibleText();
 	}
