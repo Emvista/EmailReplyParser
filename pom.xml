@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.edlio.emailreplyparser</groupId>
-	<artifactId>EmailReplyParser</artifactId>
-	<version>3.0.2</version>
+	<artifactId>${project.name}</artifactId>
+	<version>3.0.3</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
@@ -14,6 +14,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>10</java.version>
+		
+		<sonar.projectKey>${project.name}</sonar.projectKey>
+		<sonar.projectName>${project.name}</sonar.projectName>
+		<sonar.projectVersion>${project.version}</sonar.projectVersion>		
 	</properties>
 	<build>
 		<plugins>

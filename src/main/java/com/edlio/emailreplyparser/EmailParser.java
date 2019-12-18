@@ -26,7 +26,8 @@ public class EmailParser {
 	private List<FragmentDTO> fragments = new ArrayList<>();
 	private int maxParagraphLines;
 	private int maxNumCharsEachLine;
-	private static List<String> courtesyHeaders;
+	private static List<String> courtesyHeaders = List.of("bonjour", "bjr", "salut", "slt", "coucou", "cc", "bonsoir", "bsr", "cher", "chers",
+			"chère", "chères", "hello", "hi", "re", "hola", "hey");
 
 	/**
 	 * Initialize EmailParser.
@@ -40,8 +41,8 @@ public class EmailParser {
 		quoteHeadersRegex.add(
 				"[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 
-//		quoteHeadersRegex.add("^((De|Envoyé|Objet|Sujet|Subject|À|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
-//		quoteHeadersRegex.add("^((From|Sent|Object|Subjet|To|Cc|Date)( )*:( )*[^\\n]+\\n?)+");
+//		"^((De|Envoyé|Objet|Sujet|Subject|À|Cc|Date)( )*:( )*[^\\n]+\\n?)+"
+//		"^((From|Sent|Object|Subjet|To|Cc|Date)( )*:( )*[^\\n]+\\n?)+"
 
 		quoteHeadersRegex.add(
 				"[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Envoyé|Date]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}");
@@ -67,8 +68,7 @@ public class EmailParser {
 		maxNumCharsEachLine = 200;
 		compileQuoteHeaderRegexes();
 
-		courtesyHeaders = List.of("bonjour", "bjr", "salut", "slt", "coucou", "cc", "bonsoir", "bsr", "cher", "chers",
-				"chère", "chères", "hello", "hi", "re", "hola", "hey");
+		
 	}
 
 	/**
@@ -87,7 +87,6 @@ public class EmailParser {
 		if (removeCourtesyHeaders) {
 			return removeCourtesyHeaders(email);
 		}
-		// TODO : removeCourtesyFooters ?
 
 		return email;
 	}
@@ -165,14 +164,14 @@ public class EmailParser {
 			 * current fragment. Also, delete the paragraph.
 			 */
 			if (fragment != null && line.isEmpty()) {
-				String last = fragment.lines.get(fragment.lines.size() - 1);
+				String last = fragment.getLines().get(fragment.getLines().size() - 1);
 				if (isSignature(last)) {
-					fragment.isSignature = true;
+					fragment.setSignature(true);
 					addFragment(fragment);
 
 					fragment = null;
 				} else if (isQuoteHeader(paragraph)) {
-					fragment.isQuoted = true;
+					fragment.setQuoted(true);
 					addFragment(fragment);
 
 					fragment = null;
@@ -193,12 +192,12 @@ public class EmailParser {
 					addFragment(fragment);
 				}
 				fragment = new FragmentDTO();
-				fragment.isQuoted = isQuoted;
-				fragment.lines = new ArrayList<String>();
+				fragment.setQuoted(isQuoted);
+				fragment.setLines(new ArrayList<String>());
 			}
 
 			// Add line to fragment and paragraph
-			fragment.lines.add(line);
+			fragment.getLines().add(line);
 			if (!line.isEmpty()) {
 				paragraph.add(line);
 			}
@@ -278,9 +277,9 @@ public class EmailParser {
 		List<Fragment> fs = new ArrayList<>();
 		Collections.reverse(fragmentDTOs);
 		for (FragmentDTO f : fragmentDTOs) {
-			Collections.reverse(f.lines);
-			String content = new StringBuilder(StringUtils.join(f.lines, "\n")).toString();
-			Fragment fr = new Fragment(content, f.isHidden, f.isSignature, f.isQuoted);
+			Collections.reverse(f.getLines());
+			String content = new StringBuilder(StringUtils.join(f.getLines(), "\n")).toString();
+			Fragment fr = new Fragment(content, f.isHidden(), f.isSignature(), f.isQuoted());
 			fs.add(fr);
 		}
 		return new Email(fs);
@@ -325,7 +324,7 @@ public class EmailParser {
 	 * @return
 	 */
 	private boolean isEmpty(FragmentDTO fragment) {
-		return StringUtils.join(fragment.lines, "").isEmpty();
+		return StringUtils.join(fragment.getLines(), "").isEmpty();
 	}
 
 	/**
@@ -339,8 +338,8 @@ public class EmailParser {
 	 * @return
 	 */
 	private boolean isFragmentLine(FragmentDTO fragment, String line, boolean isQuoted) {
-		return fragment.isQuoted == isQuoted
-				|| (fragment.isQuoted && (isQuoteHeader(Arrays.asList(line)) || line.isEmpty()));
+		return fragment.isQuoted() == isQuoted
+				|| (fragment.isQuoted() && (isQuoteHeader(Arrays.asList(line)) || line.isEmpty()));
 	}
 
 	/**
@@ -349,8 +348,8 @@ public class EmailParser {
 	 * @param fragment
 	 */
 	private void addFragment(FragmentDTO fragment) {
-		if (fragment.isQuoted || fragment.isSignature || isEmpty(fragment))
-			fragment.isHidden = true;
+		if (fragment.isQuoted() || fragment.isSignature() || isEmpty(fragment))
+			fragment.setHidden(true);
 
 		fragments.add(fragment);
 	}
@@ -417,7 +416,7 @@ public class EmailParser {
 			}
 		}
 		List<String> signaturelines = new ArrayList<>();
-		for (int i = stop; i < emailLines.length; i++) {
+		for (int i = stop-1; i < emailLines.length; i++) {
 			signaturelines.add(emailLines[i]);
 		}
 		List<String> visiblelines = new ArrayList<>();

@@ -10,6 +10,11 @@ public class EmailReplyParser {
 		return parser.parse(emailText);
 	}
 	
+	 private EmailReplyParser() {
+		    throw new IllegalStateException("Utility class");
+		  }
+
+
 	public static String parseReply(String emailText) {
 		return read(emailText).getVisibleText();
 	}
