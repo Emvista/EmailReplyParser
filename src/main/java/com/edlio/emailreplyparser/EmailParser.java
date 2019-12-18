@@ -417,7 +417,7 @@ public class EmailParser {
 			}
 		}
 		List<String> signaturelines = new ArrayList<>();
-		for (int i = stop; i < emailLines.length; i++) {
+		for (int i = stop-1; i < emailLines.length; i++) {
 			signaturelines.add(emailLines[i]);
 		}
 		List<String> visiblelines = new ArrayList<>();
