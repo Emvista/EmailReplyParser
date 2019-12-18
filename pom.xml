@@ -14,6 +14,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>10</java.version>
+		<sonar.projectKey>EmailReplyParser</sonar.projectKey>
+		<sonar.projectName>EmailReplyParser</sonar.projectName>
+		<sonar.projectVersion>3.0.3</sonar.projectVersion>
 	</properties>
 	<build>
 		<plugins>
