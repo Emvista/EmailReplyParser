@@ -5,19 +5,26 @@
 
 	<groupId>com.edlio.emailreplyparser</groupId>
 	<artifactId>${project.name}</artifactId>
-	<version>3.0.3</version>
+	<version>3.0.4</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
 	<url>https://github.com/edlio/EmailReplyParser</url>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.9.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>10</java.version>
-		
+
 		<sonar.projectKey>${project.name}</sonar.projectKey>
 		<sonar.projectName>${project.name}</sonar.projectName>
-		<sonar.projectVersion>${project.version}</sonar.projectVersion>		
+		<sonar.projectVersion>${project.version}</sonar.projectVersion>
 	</properties>
 	<build>
 		<plugins>
@@ -41,19 +48,21 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<!-- Spring -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<!-- Utils -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.13</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.emvista</groupId>
+			<artifactId>emvista-utils</artifactId>
+			<version>[1.9,1.10)</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -63,9 +72,14 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
 		</dependency>
 
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<repositories>

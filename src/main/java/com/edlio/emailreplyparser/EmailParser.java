@@ -1,5 +1,8 @@
 package com.edlio.emailreplyparser;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,17 +11,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
+
+import com.emvista.utils.FilesTools;
+
+import ch.qos.logback.classic.Logger;
+
+
 
 public class EmailParser {
 
-	static final Pattern FR_SIG_PATTERN = Pattern
+	private static Logger log = (Logger) LoggerFactory.getLogger(EmailParser.class);
+	
+	private static final Pattern FR_SIG_PATTERN = Pattern
 			.compile("((^Envoyé depuis mon (\\s*\\w+){1,3}$)|(^-\\w|^\\s?__|^\\s?--|^\u2013|^\u2014))", Pattern.DOTALL);
-	static final Pattern FR_SIG_PATTERN2 = Pattern.compile("^Téléchargez Outlook pour iOS.*", Pattern.DOTALL);
-	static final Pattern EN_SIG_PATTERN = Pattern
+	private static final Pattern FR_SIG_PATTERN2 = Pattern.compile("^Téléchargez Outlook pour iOS.*", Pattern.DOTALL);
+	private static final Pattern EN_SIG_PATTERN = Pattern
 			.compile("((^Sent from my (\\s*\\w+){1,3}$)|(^-\\w|^\\s?__|^\\s?--|^\u2013|^\u2014))", Pattern.DOTALL);
-	static final Pattern QUOTE_PATTERN = Pattern.compile("(^>+)", Pattern.DOTALL);
+	private static final Pattern QUOTE_PATTERN = Pattern.compile("(^>+)", Pattern.DOTALL);
 
 	private static List<Pattern> compiledQuoteHeaderPatterns = new ArrayList<>();
 
@@ -408,18 +421,27 @@ public class EmailParser {
 		int stop = emailLines.length;
 		for (int i = emailLines.length - 1; i >= 0; i--) {
 			String emailLine = emailLines[i].trim();
-			if (emailLine.startsWith(senderMail) || emailLine.endsWith(senderMail)
-					|| emailLine.startsWith("<" + senderMail + ">") || emailLine.endsWith("<" + senderMail + ">")
+			if (emailLine.startsWith(senderMail) 
+					|| emailLine.endsWith(senderMail)
+					|| emailLine.startsWith("<" + senderMail + ">") 
+					|| emailLine.endsWith("<" + senderMail + ">")
 					|| emailLine.startsWith("<mailto:" + senderMail + ">")
-					|| emailLine.endsWith("<mailto:" + senderMail + ">") || containsUsername(emailLine, username)) {
+					|| emailLine.endsWith("<mailto:" + senderMail + ">") 
+					|| containsUsername(emailLine, username)) {
 				stop = i;
 			}
 		}
 		List<String> signaturelines = new ArrayList<>();
-		for (int i = stop-1; i < emailLines.length; i++) {
-			signaturelines.add(emailLines[i]);
+		
+		for (int i = stop; i < emailLines.length; i++) {
+				signaturelines.add(emailLines[i]);
 		}
 		List<String> visiblelines = new ArrayList<>();
+		
+		int stop2 = getFooterLine(emailLines, stop);
+		if(stop2!=-1 && stop2!=-2) {
+			stop=stop2;
+		}
 		for (int i = 0; i < stop; i++) {
 			visiblelines.add(emailLines[i]);
 		}
@@ -448,7 +470,30 @@ public class EmailParser {
 		return false;
 
 	}
+	
+	private static int getFooterLine(String[] emailLines,int stop) {
+		InputStream footersFile = FilesTools.getFileGeneric("footers.txt",EmailParser.class);
+		List<String> footers;
+		try {
+			footers = IOUtils.readLines(footersFile, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			log.error("footers.txt file no found !!!");
+			return -1;
+		}
 
+		int out = -2;
+		for (int i = stop; i >=0 && out!=-1 && stop< emailLines.length; i--) {
+			for (String form : footers) {
+				Pattern p = Pattern.compile("^" + form + "$", Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(emailLines[i].trim());
+				if (m.matches()) {
+					out=i;
+					break;
+				}
+			}
+		}
+		return out;
+	}
 	private Email removeCourtesyHeaders(Email email) {
 		String body = email.getVisibleText();
 		List<Fragment> frags = new ArrayList<>();
