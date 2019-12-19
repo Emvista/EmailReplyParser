@@ -25,19 +25,21 @@ public class EmailParserTest {
 		String encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
 		Email email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","",false);
 		String result = parser.encodeBase64Email(email.getVisibleText());
-		String expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQ==";
+		
+		String expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/";
+		
 		assertEquals(expected, result);
 		
 		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
 		email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",false);
 		result = parser.encodeBase64Email(email.getVisibleText());
-		expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXM=";
+		expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/";
 		assertEquals(expected, result);
 		
 		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
 		email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",true);
 		result = parser.encodeBase64Email(email.getVisibleText());
-		expected = "T24gc+KAmW9yZ2FuaXNlIGNvbW1lbnQgPyAKQSBwbHVz";
+		expected = "T24gc+KAmW9yZ2FuaXNlIGNvbW1lbnQgPw==";
 		assertEquals(expected, result);
 		
 		
@@ -48,7 +50,6 @@ public class EmailParserTest {
 	public void testQuoteHeaders() {
 		EmailParser parser = new EmailParser();
 		String expected = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdA==";
-		
 		
 		String encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRGUgOiBqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20gPGpvc2V0dGUuZm9ydGlzaEBob3RtYWlsLmNvbT4KRW52b3nDqSA6IG1hcmRpIDUgbm92ZW1icmUgMjAxOSAxNTozMArDgCA6IGpvc2V0dGUuZm9ydGlzaEBrYWxpcHNhLmNvbSA8am9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tPgpPYmpldCA6IFJFOiBUZXN0IGRlcyBDQyBldCBDQ0k=";
 		Email email = parser.parseEncodedEmail(encodedTtext,"blabla","",false);	
