@@ -484,7 +484,7 @@ public class EmailParser {
 		int out = -2;
 		for (int i = stop; i >=0 && out!=-1 && stop< emailLines.length; i--) {
 			for (String form : footers) {
-				Pattern p = Pattern.compile("^" + form + "(,)*$", Pattern.CASE_INSENSITIVE);
+				Pattern p = Pattern.compile("^" + form + "(,)*( )*$", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(emailLines[i].trim());
 				if (m.matches()) {
 					out=i;
