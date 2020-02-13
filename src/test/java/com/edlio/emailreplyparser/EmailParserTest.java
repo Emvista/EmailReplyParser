@@ -11,16 +11,29 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import com.emvista.edlio.emailreplyparser.Email;
+import com.emvista.edlio.emailreplyparser.EmailParser;
+import com.emvista.edlio.emailreplyparser.Fragment;
+import com.emvista.jdmrel.AppConfig;
+@RunWith(SpringRunner.class)
+@SpringBootTest()
+@ContextConfiguration(classes = { AppConfig.class})
 public class EmailParserTest {
 
 	
-	
+	@Autowired
+	EmailParser parser;
 	
 	
 	@Test
 	public void test() {
-		EmailParser parser = new EmailParser();
+		
 
 		String encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
 		Email email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","",false);
@@ -28,8 +41,8 @@ public class EmailParserTest {
 		
 		String expected = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/";
 		
-		assertEquals(expected, result);
 		
+		assertEquals(expected, result);
 		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
 		email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",false);
 		result = parser.encodeBase64Email(email.getVisibleText());
@@ -37,8 +50,10 @@ public class EmailParserTest {
 		assertEquals(expected, result);
 		
 		encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
-		email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","FortîSh Josette",true);
+		
+		email = parser.parseEncodedEmail(encodedTtext,"lorene.milliex@axlr.com","FortîSh Josette",true);
 		result = parser.encodeBase64Email(email.getVisibleText());
+		
 		expected = "T24gc+KAmW9yZ2FuaXNlIGNvbW1lbnQgPw==";
 		assertEquals(expected, result);
 		
@@ -48,7 +63,7 @@ public class EmailParserTest {
 	}
 	@Test
 	public void testQuoteHeaders() {
-		EmailParser parser = new EmailParser();
+		
 		String expected = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdA==";
 		
 		String encodedTtext  = "UmUgIQpDZWNpIGVzdCB1biBzZWNvbmQgdGVzdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRGUgOiBqb3NldHRlLmZvcnRpc2hAaG90bWFpbC5jb20gPGpvc2V0dGUuZm9ydGlzaEBob3RtYWlsLmNvbT4KRW52b3nDqSA6IG1hcmRpIDUgbm92ZW1icmUgMjAxOSAxNTozMArDgCA6IGpvc2V0dGUuZm9ydGlzaEBrYWxpcHNhLmNvbSA8am9zZXR0ZS5mb3J0aXNoQGthbGlwc2EuY29tPgpPYmpldCA6IFJFOiBUZXN0IGRlcyBDQyBldCBDQ0k=";
@@ -93,7 +108,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testReadsSimpleBody() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_1.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_1.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		assertEquals(3, fragments.size());
@@ -114,7 +129,7 @@ public class EmailParserTest {
 
 	@Test
 	public void testReadsTopPost() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_3.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_3.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		assertEquals(5, fragments.size());
@@ -156,7 +171,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testReadsBottomPost() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_2.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_2.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		assertEquals(6, fragments.size());
@@ -182,7 +197,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testRecognizesDateStringAboveQuote() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_4.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_4.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		Pattern pattern = Pattern.compile("Awesome");
@@ -202,7 +217,7 @@ public class EmailParserTest {
 	@Test
 	public void testDoesNotModifyInputString() {
 		String input = "The Quick Brown Fox Jumps Over The Lazy Dog";
-		Email email = new EmailParser().parse(input);
+		Email email = parser.parse(input);
 		List<Fragment> fragments = email.getFragments();
 		
 		assertEquals("The Quick Brown Fox Jumps Over The Lazy Dog", fragments.get(0).getContent());
@@ -211,7 +226,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testComplexBodyWithOnlyOneFragment() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_5.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_5.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		assertEquals(1, fragments.size());
@@ -219,7 +234,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testDealsWithMultilineReplyHeaders() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_6.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_6.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		Pattern pattern = Pattern.compile("I get");
@@ -237,7 +252,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testGetVisibleTextReturnsOnlyVisibleFragments() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_2_1.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_2_1.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		List<String> visibleFragments = new ArrayList<String>();
@@ -250,7 +265,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testReadsEmailWithCorrectSignature() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("correct_sig.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("correct_sig.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		assertEquals(2, fragments.size());
@@ -271,7 +286,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testOneIsNotOn() {
-		Email email = new EmailParser().parse(FixtureGetter.getFixture("email_one_is_not_on.txt"));
+		Email email = parser.parse(FixtureGetter.getFixture("email_one_is_not_on.txt"));
 		List<Fragment> fragments = email.getFragments();
 		
 		Pattern pattern = Pattern.compile("One outstanding question");
@@ -285,7 +300,7 @@ public class EmailParserTest {
 	
 	//@Test
 	public void testCustomQuoteHeader() {
-		EmailParser parser = new EmailParser();
+		
 		parser.getQuoteHeadersRegex().add("^(\\d{4}(.+)rta:)");
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_custom_quote_header.txt"));
@@ -294,7 +309,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testCustomQuoteHeader2() {
-		EmailParser parser = new EmailParser();
+		
 		parser.getQuoteHeadersRegex().add("^(From\\: .+ .+test\\@webdomain\\.com.+)");
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_customer_quote_header_2.txt"));
@@ -303,7 +318,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testAbnormalQuoteHeader1() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_abnormal_quote_header_1.txt"));
 		assertEquals("Thank you kindly!", email.getVisibleText());
@@ -311,7 +326,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testAbnormalQuoteHeader2() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_abnormal_quote_header_2.txt"));
 		assertEquals(
@@ -323,7 +338,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testAbnormalQuoteHeader3() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_abnormal_quote_header_3.txt"));
 		assertEquals(
@@ -343,7 +358,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testAbnormalQuoteHeader4() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_abnormal_quote_header_4.txt"));
 		assertEquals(
@@ -359,7 +374,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testAbnormalQuoteHeader5() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_abnormal_quote_header_5.txt"));
 		assertEquals(
@@ -370,7 +385,7 @@ public class EmailParserTest {
 
 	@Test
 	public void testAbnormalQuoteHeaderLong() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_abnormal_quote_header_long.txt"));
 		assertEquals(
@@ -381,7 +396,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testEmDashSignature() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_em_dash.txt"));
 		assertEquals("Thank you.", email.getVisibleText());
@@ -389,7 +404,7 @@ public class EmailParserTest {
 	
 	@Test
 	public void testEnDashSignature() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_en_dash.txt"));
 		assertEquals("Thank you.", email.getVisibleText());
@@ -397,7 +412,7 @@ public class EmailParserTest {
 
 	@Test
 	public void testDashesBetweenWords() {
-		EmailParser parser = new EmailParser();
+		
 		
 		Email email = parser.parse(FixtureGetter.getFixture("email_dashes_between_words.txt"));
 		assertEquals(

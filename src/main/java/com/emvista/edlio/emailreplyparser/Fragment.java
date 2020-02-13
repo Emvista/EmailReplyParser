@@ -1,4 +1,4 @@
-package com.edlio.emailreplyparser;
+package com.emvista.edlio.emailreplyparser;
 
 public class Fragment {
 	private String content;
