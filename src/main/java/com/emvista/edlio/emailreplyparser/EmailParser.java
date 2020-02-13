@@ -1,4 +1,4 @@
-package com.edlio.emailreplyparser;
+package com.emvista.edlio.emailreplyparser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,15 +15,21 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.emvista.jdmrel.staticLexicon.lefff.LefffLexicon;
 import com.emvista.utils.FilesTools;
 
 import ch.qos.logback.classic.Logger;
 
 
-
+@Component
 public class EmailParser {
 
+	@Autowired
+	LefffLexicon lefff;
+	
 	private static Logger log = (Logger) LoggerFactory.getLogger(EmailParser.class);
 	
 	private static final Pattern FR_SIG_PATTERN = Pattern
@@ -45,10 +51,12 @@ public class EmailParser {
 	/**
 	 * Initialize EmailParser.
 	 */
+	@Autowired
 	public EmailParser() {
 		quoteHeadersRegex.add("^((Le\\s)?(.{1,500})a(.{1,2})écrit([ | ])*:)");
 		quoteHeadersRegex.add("^(On\\s(.{1,500})wrote([ | ])*:)");
 		quoteHeadersRegex.add("^\\[Logo\\]");
+		quoteHeadersRegex.add("^(\\*)*\\[image: cid.*");
 		quoteHeadersRegex.add(
 				"[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add(
@@ -129,7 +137,15 @@ public class EmailParser {
 		return org.apache.commons.codec.binary.StringUtils.newStringUtf8(Base64.encodeBase64(body.getBytes()));
 
 	}
-
+	private int getPreviousIndexLine(String[] lines,int lineIndex) {
+		for(int i=lineIndex-1;i>=0;i--) {
+			if(!lines[i].isEmpty()) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	/**
 	 * Splits the given email text into a list of {@link Fragment} and returns the
 	 * {@link Email} object.
@@ -139,14 +155,25 @@ public class EmailParser {
 	 */
 	public Email parse(String emailText) {
 		fragments = new ArrayList<>();
-
 		// Normalize line endings
-		emailText = emailText.replace("\r\n", "\n");
+		emailText = emailText.replace("\r\n", "\n").replace(" ", " ");
 
 		FragmentDTO fragment = null;
 
 		// Split body to multiple lines.
 		String[] lines = new StringBuilder(emailText).toString().split("\n");
+		for(int i=1;i<lines.length;i++) {
+
+			int previousIndex = getPreviousIndexLine(lines, i);
+			
+			
+			if(!lines[i].isEmpty() && previousIndex!=-1 && 
+					StringUtils.isAllUpperCase(lines[i].subSequence(0, 1)) && 
+					lefff.contains(lines[i].split(" ")[0].toLowerCase()) && 
+					!lines[previousIndex].matches(".*\\p{Punct}( )*$") ) {
+				lines[previousIndex] =lines[previousIndex]+ " .";
+			}
+		}
 		/*
 		 * Reverse the array.
 		 * 
@@ -420,7 +447,7 @@ public class EmailParser {
 
 		int stop = emailLines.length;
 		for (int i = emailLines.length - 1; i >= 0; i--) {
-			String emailLine = emailLines[i].trim();
+			String emailLine = emailLines[i].trim().replace("*", "");
 			if (emailLine.startsWith(senderMail) 
 					|| emailLine.endsWith(senderMail)
 					|| emailLine.startsWith("<" + senderMail + ">") 
@@ -484,7 +511,7 @@ public class EmailParser {
 		int out = -2;
 		for (int i = stop; i >=0 && out!=-1 && stop< emailLines.length; i--) {
 			for (String form : footers) {
-				Pattern p = Pattern.compile("^" + form + "(,)*( )*$", Pattern.CASE_INSENSITIVE);
+				Pattern p = Pattern.compile("^" + form + "( )*(,|\\.)*( )*$", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(emailLines[i].trim());
 				if (m.matches()) {
 					out=i;

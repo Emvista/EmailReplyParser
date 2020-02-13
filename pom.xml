@@ -5,7 +5,7 @@
 
 	<groupId>com.edlio.emailreplyparser</groupId>
 	<artifactId>${project.name}</artifactId>
-	<version>3.1.1</version>
+	<version>4.0.0</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
@@ -60,8 +60,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.emvista</groupId>
-			<artifactId>emvista-utils</artifactId>
-			<version>[1.9,1.10)</version>
+			<artifactId>semanticrel</artifactId>
+			<version>[7.3,7.4)</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
