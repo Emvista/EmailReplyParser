@@ -61,7 +61,7 @@ pipeline {
             steps {
                  echo 'Deploying with maven on archiva..'
                 withMaven(maven: 'M3', jdk: 'OPENJDK10') {
-                    sh 'mvn deploy -DskipTests -DaltDeploymentRepository=dev::default::http://mercury.em:8080/repository/dev'
+                    sh 'mvn deploy -DskipTests -DaltDeploymentRepository=dev::default::http://archiva.em/repository/dev'
                 }
             }
         }

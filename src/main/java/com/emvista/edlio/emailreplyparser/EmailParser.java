@@ -445,14 +445,14 @@ public class EmailParser {
 	private Email removeSenderSignature(Email email, String senderMail, String username) {
 		String[] emailLines = email.getVisibleText().split("\n");
 
-		int stop = emailLines.length;
+		int stop = emailLines.length-1;
 		for (int i = emailLines.length - 1; i >= 0; i--) {
 			String emailLine = emailLines[i].trim().replace("*", "");
 			if (emailLine.startsWith(senderMail) 
 					|| emailLine.endsWith(senderMail)
 					|| emailLine.startsWith("<" + senderMail + ">") 
 					|| emailLine.endsWith("<" + senderMail + ">")
-					|| emailLine.startsWith("<mailto:" + senderMail + ">")
+					|| emailLine.contains("<mailto:" + senderMail + ">")
 					|| emailLine.endsWith("<mailto:" + senderMail + ">") 
 					|| containsUsername(emailLine, username)) {
 				stop = i;
@@ -464,10 +464,12 @@ public class EmailParser {
 				signaturelines.add(emailLines[i]);
 		}
 		List<String> visiblelines = new ArrayList<>();
-		
 		int stop2 = getFooterLine(emailLines, stop);
 		if(stop2!=-1 && stop2!=-2) {
 			stop=stop2;
+		}
+		else if(stop == emailLines.length-1){
+			stop= emailLines.length;
 		}
 		for (int i = 0; i < stop; i++) {
 			visiblelines.add(emailLines[i]);
@@ -507,7 +509,6 @@ public class EmailParser {
 			log.error("footers.txt file no found !!!");
 			return -1;
 		}
-
 		int out = -2;
 		for (int i = stop; i >=0 && out!=-1 && stop< emailLines.length; i--) {
 			for (String form : footers) {

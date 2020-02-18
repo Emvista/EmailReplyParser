@@ -5,7 +5,7 @@
 
 	<groupId>com.edlio.emailreplyparser</groupId>
 	<artifactId>${project.name}</artifactId>
-	<version>4.0.0</version>
+	<version>4.2.0</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
@@ -21,7 +21,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>10</java.version>
-
 		<sonar.projectKey>${project.name}</sonar.projectKey>
 		<sonar.projectName>${project.name}</sonar.projectName>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
@@ -61,7 +60,7 @@
 		<dependency>
 			<groupId>com.emvista</groupId>
 			<artifactId>semanticrel</artifactId>
-			<version>[7.3,7.4)</version>
+			<version>[7.4,7.5)</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -86,7 +85,7 @@
 		<repository>
 			<id>dev</id>
 			<name>dev</name>
-			<url>http://mercury.em:8080/repository/dev</url>
+			<url>http://archiva.em/repository/dev</url>
 		</repository>
 	</repositories>
 </project>
