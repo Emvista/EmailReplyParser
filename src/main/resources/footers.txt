@@ -20,14 +20,10 @@ Bonne fin de semaine
 Bon weekend
 Bien à vous
 Thank You
-A bientôt
-À bientôt
-A plus
-À plus
-À demain
-A demain
-A(\+)+
-À(\+)+
+(A|À) (très )?(bientôt|bientot)
+(A|À) très vite
+(A|À) plus( tard)?
+(A|À) demain
+(A|À)(\+)+
 @(\+)+
-À (lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)
-A (lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)
+(A|À) (lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)
