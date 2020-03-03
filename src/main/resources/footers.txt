@@ -20,7 +20,7 @@ Bonne fin de semaine
 Bon weekend
 Bien à vous
 Thank You
-(A|À) (très)? (bientôt|bientot)
+(A|À) (très )?(bientôt|bientot)
 (A|À) très vite
 (A|À) plus( tard)?
 (A|À) demain
