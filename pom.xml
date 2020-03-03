@@ -5,7 +5,7 @@
 
 	<groupId>com.edlio.emailreplyparser</groupId>
 	<artifactId>${project.name}</artifactId>
-	<version>4.2.0</version>
+	<version>4.2.1</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>

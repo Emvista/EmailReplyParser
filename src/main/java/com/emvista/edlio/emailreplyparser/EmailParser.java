@@ -56,7 +56,7 @@ public class EmailParser {
 		quoteHeadersRegex.add("^((Le\\s)?(.{1,500})a(.{1,2})écrit([ | ])*:)");
 		quoteHeadersRegex.add("^(On\\s(.{1,500})wrote([ | ])*:)");
 		quoteHeadersRegex.add("^\\[Logo\\]");
-		quoteHeadersRegex.add("^(\\*)*\\[image: cid.*");
+		quoteHeadersRegex.add("^(\\*)*\\[image: .*");
 		quoteHeadersRegex.add(
 				"[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[De|À]( )*:( )*[^\\n]+\\n?([^\\n]+\\n?){0,2}[Objet|Sujet|Subject]( )*:( )*[^\\n]+");
 		quoteHeadersRegex.add(
@@ -127,7 +127,6 @@ public class EmailParser {
 	}
 
 	public String decodeBase64Email(String body) {
-
 		return org.apache.commons.codec.binary.StringUtils.newStringUtf8(Base64.decodeBase64(body));
 
 	}
