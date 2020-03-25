@@ -33,8 +33,8 @@ public class EmailParser {
 	private static Logger log = (Logger) LoggerFactory.getLogger(EmailParser.class);
 	
 	private static final Pattern FR_SIG_PATTERN = Pattern
-			.compile("((^Envoyé depuis mon (\\s*\\w+){1,3}$)|(^-\\w|^\\s?__|^\\s?--|^\u2013|^\u2014))", Pattern.DOTALL);
-	private static final Pattern FR_SIG_PATTERN2 = Pattern.compile("^Téléchargez Outlook pour iOS.*", Pattern.DOTALL);
+			.compile("(^Envoyé (depuis|de) mon .*)", Pattern.DOTALL);
+	private static final Pattern FR_SIG_PATTERN2 = Pattern.compile("^Téléchargez Outlook pour .*", Pattern.DOTALL);
 	private static final Pattern EN_SIG_PATTERN = Pattern
 			.compile("((^Sent from my (\\s*\\w+){1,3}$)|(^-\\w|^\\s?__|^\\s?--|^\u2013|^\u2014))", Pattern.DOTALL);
 	private static final Pattern QUOTE_PATTERN = Pattern.compile("(^>+)", Pattern.DOTALL);
