@@ -13,11 +13,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.emvista.edlio.emailreplyparser.EmailParser;
 import com.emvista.edlio.emailreplyparser.HtmlFilter;
-import com.emvista.jdmrel.AppConfig;
+import com.emvista.semanticrel.SemanticRelConfig;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
-@ContextConfiguration(classes = { AppConfig.class })
+@ContextConfiguration(classes = { SemanticRelConfig.class })
 class HtmlFilterTest {
 
 	@Autowired

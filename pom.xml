@@ -5,7 +5,7 @@
 
 	<groupId>com.edlio.emailreplyparser</groupId>
 	<artifactId>${project.name}</artifactId>
-	<version>4.3.0</version>
+	<version>5.0.0</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
@@ -20,7 +20,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>10</java.version>
+		<java.version>11</java.version>
 		<sonar.projectKey>${project.name}</sonar.projectKey>
 		<sonar.projectName>${project.name}</sonar.projectName>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
@@ -31,10 +31,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<release>10</release>
+					<release>11</release>
 					<encoding>UTF-8</encoding>
-					<source>10</source>
-					<target>10</target>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>com.emvista</groupId>
 			<artifactId>semanticrel</artifactId>
-			<version>7.11.1</version>
+			<version>0.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
