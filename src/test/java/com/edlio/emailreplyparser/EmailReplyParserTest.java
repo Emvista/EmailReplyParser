@@ -11,11 +11,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.emvista.edlio.emailreplyparser.Email;
 import com.emvista.edlio.emailreplyparser.EmailReplyParser;
-import com.emvista.jdmrel.AppConfig;
+import com.emvista.semanticrel.SemanticRelConfig;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
-@ContextConfiguration(classes = { AppConfig.class})
+@ContextConfiguration(classes = { SemanticRelConfig.class})
 public class EmailReplyParserTest {
 
 	@Autowired

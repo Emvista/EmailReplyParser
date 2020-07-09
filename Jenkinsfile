@@ -1,69 +1,48 @@
 pipeline {
-    agent any
-    post {
-        always {
-            echo 'Cleaning workspace'
-            deleteDir() /* clean up our workspace */
-        }
-        success {
-            echo 'succeeeded!'
-        }
-        unstable {
-            echo 'unstable'
-        }
-        failure {
-            echo 'failed'
-        }
-        changed {
-            echo 'Things were different before...'
-        }
+ agent {
+  docker 'adoptopenjdk/maven-openjdk11'
+ }
+
+ stages {
+
+  stage('Build') {
+   steps {
+    echo 'Building with maven...'
+    configFileProvider([configFile(fileId: 'daa266f8-d247-499d-97bc-a7b4826e8d3f', variable: 'SETTINGS')]) {
+     sh 'mvn -s $SETTINGS clean package'
     }
-    stages {
-        stage ('initialization') {
-            steps {
-                sh '''
-                 echo 'Initialization...'
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                    '''
-            }
-        }
-        stage('Sonar') {
-            environment {
-                scannerHome = tool 'SonarQubeScanner'
-                }    
-            steps {
-                withSonarQubeEnv('Sonar') {
-                    //sh "${scannerHome}/bin/sonar-scanner"
-                    withMaven(maven:'M3', jdk: 'OPENJDK10') {
-                        sh 'mvn clean verify sonar:sonar -DskipTests  -Ddocker.skip=true'
-                    }
-                    
-                }
-                timeout(time: 10, unit: 'MINUTES') {
-                       waitForQualityGate abortPipeline: true
-                }   
-                
-            }
-        }
-        stage('Build') {
-            steps {
-                echo 'Building with maven...'
-                withMaven(maven: 'M3', jdk: 'OPENJDK10') {
-                    sh 'mvn clean install'
-                }
-            }
-        }
-         stage('DeployDev') {
-            when {
-                branch 'dev'
-            }
-            steps {
-                 echo 'Deploying with maven on archiva..'
-                withMaven(maven: 'M3', jdk: 'OPENJDK10') {
-                    sh 'mvn deploy -DskipTests -DaltDeploymentRepository=dev::default::http://archiva.em/repository/dev'
-                }
-            }
-        }
+   }
+  }
+  stage('Sonar') {
+   when {
+    not {
+     branch 'dev'
     }
+   }
+   steps {
+    echo 'Run Sonar...'
+    configFileProvider([configFile(fileId: 'daa266f8-d247-499d-97bc-a7b4826e8d3f', variable: 'SETTINGS')]) {
+     sh 'mvn -s $SETTINGS clean -DskipTest verify sonar:sonar -Dsonar.host.url=http://sonar.em'
+    }
+   }
+  }
+  stage('DeployDev') {
+   when {
+    branch 'dev'
+   }
+   steps {
+    echo 'Deploying with maven on archiva..'
+    configFileProvider([configFile(fileId: 'daa266f8-d247-499d-97bc-a7b4826e8d3f', variable: 'SETTINGS')]) {
+     sh 'mvn -s $SETTINGS deploy -DskipTests -DaltDeploymentRepository=dev::default::http://archiva.em/repository/dev'
+    }
+   }
+  }
+ }
+ post {
+  always {
+   echo 'Cleaning workspace'
+   deleteDir() /* clean up our workspace */
+  }
+ }
+
 }

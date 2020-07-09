@@ -14,14 +14,14 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.emvista.jdmrel.staticLexicon.lefff.LefffLexicon;
+import com.emvista.semanticrel.staticLexicon.lefff.LefffLexicon;
 import com.emvista.utils.FilesTools;
 
-import ch.qos.logback.classic.Logger;
 
 
 @Component
@@ -30,7 +30,7 @@ public class EmailParser {
 	@Autowired
 	LefffLexicon lefff;
 	
-	private static Logger log = (Logger) LoggerFactory.getLogger(EmailParser.class);
+	private static Logger log = LoggerFactory.getLogger(EmailParser.class);
 	
 	private static final Pattern FR_SIG_PATTERN = Pattern
 			.compile("(^Envoyé (depuis|de) mon .*)", Pattern.DOTALL);
