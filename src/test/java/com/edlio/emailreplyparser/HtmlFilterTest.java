@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import com.emvista.lexicon.LexConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.emvista.edlio.emailreplyparser.EmailParser;
 import com.emvista.edlio.emailreplyparser.HtmlFilter;
-import com.emvista.semanticrel.SemanticRelConfig;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
-@ContextConfiguration(classes = { SemanticRelConfig.class })
+@ContextConfiguration(classes = { LexConfig.class })
 class HtmlFilterTest {
 
 	@Autowired

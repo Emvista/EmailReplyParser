@@ -2,6 +2,7 @@ package com.edlio.emailreplyparser;
 
 import static org.junit.Assert.assertEquals;
 
+import com.emvista.lexicon.LexConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.emvista.edlio.emailreplyparser.Email;
 import com.emvista.edlio.emailreplyparser.EmailReplyParser;
-import com.emvista.semanticrel.SemanticRelConfig;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
-@ContextConfiguration(classes = { SemanticRelConfig.class})
+@ContextConfiguration(classes = { LexConfig.class})
 public class EmailReplyParserTest {
 
 	@Autowired

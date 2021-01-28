@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.emvista.lexicon.LexConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.emvista.edlio.emailreplyparser.Email;
 import com.emvista.edlio.emailreplyparser.EmailParser;
 import com.emvista.edlio.emailreplyparser.Fragment;
-import com.emvista.semanticrel.SemanticRelConfig;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest()
-@ContextConfiguration(classes = { SemanticRelConfig.class})
+@ContextConfiguration(classes = { LexConfig.class})
 public class EmailParserTest {
 
 	
