@@ -3,18 +3,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.edlio.emailreplyparser</groupId>
-	<artifactId>${project.name}</artifactId>
-	<version>6.0.0</version>
+	<groupId>com.emvista.emailreplyparser</groupId>
+	<artifactId>EmailReplyParser</artifactId>
+	<version>7.0.0</version>
 
 	<packaging>jar</packaging>
 	<name>EmailReplyParser</name>
 	<url>https://github.com/edlio/EmailReplyParser</url>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.4.RELEASE</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-parent</artifactId>
+			<version>2.4.5</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -58,9 +58,9 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.emvista</groupId>
-			<artifactId>lexicon-library</artifactId>
-			<version>8.0.1</version>
+			<groupId>com.emvista.lexicon-library</groupId>
+			<artifactId>lexicon-reader</artifactId>
+			<version>10.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

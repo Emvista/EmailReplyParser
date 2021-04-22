@@ -1,23 +1,20 @@
-package com.edlio.emailreplyparser;
+package com.emvista.emailreplyparser;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
-import com.emvista.lexicon.LexConfig;
+import com.emvista.emailreplyparser.service.HtmlFilter;
+import com.emvista.lexiconreader.MultiTenantMongoDBFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.emvista.edlio.emailreplyparser.EmailParser;
-import com.emvista.edlio.emailreplyparser.HtmlFilter;
+import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest()
-@ContextConfiguration(classes = { LexConfig.class })
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)@SpringBootTest()
+@ContextConfiguration(classes = { MultiTenantMongoDBFactory.class})
 class HtmlFilterTest {
 
 	@Autowired

@@ -1,0 +1,9 @@
+com:
+  emvista:
+    lexicon:
+      mongodb:
+        host: venus.em
+        port: 27017
+        database:
+          fr: Lex_Fr
+          en: Lex_En

@@ -1,30 +1,28 @@
-package com.edlio.emailreplyparser;
+package com.emvista.emailreplyparser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.emvista.lexicon.LexConfig;
+import com.emvista.emailreplyparser.model.Email;
+import com.emvista.emailreplyparser.model.Fragment;
+import com.emvista.lexiconreader.MultiTenantMongoDBFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.emvista.edlio.emailreplyparser.Email;
-import com.emvista.edlio.emailreplyparser.EmailParser;
-import com.emvista.edlio.emailreplyparser.Fragment;
-
-@RunWith(SpringRunner.class)
 @SpringBootTest()
-@ContextConfiguration(classes = { LexConfig.class})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { MultiTenantMongoDBFactory.class})
 public class EmailParserTest {
 
 	
@@ -34,7 +32,8 @@ public class EmailParserTest {
 	
 	@Test
 	public void test() {
-		
+		Email e = parser.parse("Je te remercie !\nCordialement\nMelissa Mekaoui\n melissa.mekaoui@gmail.com");
+		e.getFragments().forEach(f -> System.out.println(f.isSignature()+" : "+f.getContent()));
 
 		String encodedTtext = "U2FsdXQsCgpPbiBz4oCZb3JnYW5pc2UgY29tbWVudCA/CgpBIHBsdXMKSm9zZXR0ZSBGb3J0aXNoIC0gU3RhZ2nDqHJlIGNoZXogS0FMSVBTQQpqb3NldHRlLmZvcnRpc2hAa2FsaXBzYS5jb20KKzMzIDIgOTIgODkgMDIgNTUKCj4gT24gMjEgTWF5IDIwMTksIGF0IDA2OjM2LCBMdWMgQmFzc29u";
 		Email email = parser.parseEncodedEmail(encodedTtext,"josette.fortish@kalipsa.com","",false);

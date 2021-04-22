@@ -1,7 +1,10 @@
-package com.emvista.edlio.emailreplyparser;
+package com.emvista.emailreplyparser;
 
-import com.emvista.lexicon.api.TermApi;
-import com.emvista.lexicon.enums.SourceName;
+import com.emvista.emailreplyparser.model.Email;
+import com.emvista.emailreplyparser.model.Fragment;
+import com.emvista.emailreplyparser.model.FragmentDTO;
+import com.emvista.lexiconmodel.enums.SourceName;
+import com.emvista.lexiconreader.component.TermReader;
 import com.emvista.utils.FilesTools;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -27,7 +30,7 @@ import java.util.regex.Pattern;
 public class EmailParser {
 
     @Autowired
-    TermApi termApi;
+    TermReader termApi;
 
     private static final Logger log = LoggerFactory.getLogger(EmailParser.class);
 
