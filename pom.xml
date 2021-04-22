@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>com.emvista.lexicon-library</groupId>
 			<artifactId>lexicon-reader</artifactId>
-			<version>10.3.0</version>
+			<version>11.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

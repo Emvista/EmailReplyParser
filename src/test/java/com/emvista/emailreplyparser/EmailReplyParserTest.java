@@ -3,9 +3,13 @@ package com.emvista.emailreplyparser;
 
 import com.emvista.emailreplyparser.model.Email;
 import com.emvista.lexiconreader.MultiTenantMongoDBFactory;
+import com.emvista.lexiconreader.mongo.TenantProvider;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -15,10 +19,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @ContextConfiguration(classes = { MultiTenantMongoDBFactory.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EmailReplyParserTest {
 
     @Autowired
     EmailReplyParser emailReplyParser;
+
+    @Value("${com.emvista.lexicon.mongodb.database.fr}")
+    private String databaseNameFr;
+
+    @BeforeAll
+    public void init() {
+        TenantProvider.setCurrentDb(databaseNameFr);
+    }
 
     @Test
     public void testReadWithNullContent() {
