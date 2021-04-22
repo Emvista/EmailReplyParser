@@ -1,4 +1,4 @@
-package com.emvista.edlio.emailreplyparser;
+package com.emvista.emailreplyparser.model;
 
 import java.util.ArrayList;
 import java.util.List;

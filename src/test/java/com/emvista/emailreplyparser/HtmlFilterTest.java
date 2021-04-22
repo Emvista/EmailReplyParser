@@ -1,23 +1,25 @@
-package com.edlio.emailreplyparser;
+package com.emvista.emailreplyparser;
 
-import static org.junit.Assert.assertTrue;
+import com.emvista.emailreplyparser.service.HtmlFilter;
+import com.emvista.lexiconreader.MultiTenantMongoDBFactory;
+import com.emvista.lexiconreader.mongo.TenantProvider;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import com.emvista.lexicon.LexConfig;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.emvista.edlio.emailreplyparser.EmailParser;
-import com.emvista.edlio.emailreplyparser.HtmlFilter;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest()
-@ContextConfiguration(classes = { LexConfig.class })
+@ExtendWith(SpringExtension.class)@SpringBootTest()
+@ContextConfiguration(classes = { MultiTenantMongoDBFactory.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class HtmlFilterTest {
 
 	@Autowired
@@ -25,6 +27,15 @@ class HtmlFilterTest {
 
 	@Autowired
 	EmailParser parser;
+
+	@Value("${com.emvista.lexicon.mongodb.database.fr}")
+	private String databaseNameFr;
+
+	@BeforeAll
+	public void init() {
+		TenantProvider.setCurrentDb(databaseNameFr);
+	}
+
 
 	@Test
 	void test() {

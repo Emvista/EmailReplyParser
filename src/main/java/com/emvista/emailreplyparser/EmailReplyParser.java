@@ -1,5 +1,6 @@
-package com.emvista.edlio.emailreplyparser;
+package com.emvista.emailreplyparser;
 
+import com.emvista.emailreplyparser.model.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -9,7 +9,7 @@ pipeline {
    steps {
     echo 'Building with maven...'
     configFileProvider([configFile(fileId: 'daa266f8-d247-499d-97bc-a7b4826e8d3f', variable: 'SETTINGS')]) {
-     sh 'mvn -s $SETTINGS clean package'
+     sh 'mvn -ntp -s $SETTINGS clean package'
     }
    }
   }
@@ -22,7 +22,7 @@ pipeline {
    steps {
     echo 'Run Sonar...'
     configFileProvider([configFile(fileId: 'daa266f8-d247-499d-97bc-a7b4826e8d3f', variable: 'SETTINGS')]) {
-     sh 'mvn -s $SETTINGS clean -DskipTest verify sonar:sonar -Dsonar.host.url=http://sonar.em'
+     sh 'mvn -ntp -s $SETTINGS clean -DskipTest verify sonar:sonar -Dsonar.host.url=http://sonar.em'
     }
    }
   }
@@ -33,7 +33,7 @@ pipeline {
    steps {
     echo 'Deploying with maven on archiva..'
     configFileProvider([configFile(fileId: 'daa266f8-d247-499d-97bc-a7b4826e8d3f', variable: 'SETTINGS')]) {
-     sh 'mvn -s $SETTINGS deploy -DskipTests -DaltDeploymentRepository=dev::default::http://archiva.em/repository/dev'
+     sh 'mvn -ntp -s $SETTINGS deploy -DskipTests -DaltDeploymentRepository=dev::default::http://archiva.em/repository/dev'
     }
    }
   }
